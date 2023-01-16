@@ -1,0 +1,508 @@
+
+../../external/gcc/configure \
+--host=`gcc -dumpmachine` \
+--prefix=../..
+
+
+
+--prefix=dirname
+Specify the toplevel installation directory. This is the recommended way to install the tools into a directory other than the default. The toplevel installation directory defaults to /usr/local.
+
+We highly recommend against dirname being the same or a subdirectory of objdir or vice versa. If specifying a directory beneath a user’s home directory tree, some shells will not expand dirname correctly if it contains the ‘~’ metacharacter; use $HOME instead.
+
+
+
+--enable-multiarch
+Specify whether to enable or disable multiarch support. The default is to check for glibc start files in a multiarch location, and enable it if the files are found. The auto detection is enabled for native builds, and for cross builds configured with --with-sysroot, and without --with-native-system-header-dir. More documentation about multiarch can be found at https://wiki.debian.org/Multiarch.
+
+--disable-multilib
+Specify that multiple target libraries to support different target variants, calling conventions, etc. should not be built. The default is to build a predefined set of them.
+
+Some targets provide finer-grained control over which multilibs are built (e.g., --disable-softfloat):
+
+--with-multilib-list=list
+--without-multilib-list
+Specify what multilibs to build. list is a comma separated list of values, possibly consisting of a single value. Currently only implemented for aarch64*-*-*, arm*-*-*, loongarch64-*-*, riscv*-*-*, sh*-*-* and x86-64-*-linux*. The accepted values and meaning for each target is given below.
+
+--with-multilib-generator=config
+Specify what multilibs to build. config is a semicolon separated list of values, possibly consisting of a single value. Currently only implemented for riscv*-*-elf*. The accepted values and meanings are given below.
+
+Every config is constructed with four components: architecture string, ABI, reuse rule with architecture string and reuse rule with sub-extension.
+
+Example 1: Add multi-lib suppport for rv32i with ilp32.
+
+rv32i-ilp32--
+Example 2: Add multi-lib suppport for rv32i with ilp32 and rv32imafd with ilp32.
+
+rv32i-ilp32--;rv32imafd-ilp32--
+Example 3: Add multi-lib suppport for rv32i with ilp32; rv32im with ilp32 and rv32ic with ilp32 will reuse this multi-lib set.
+
+rv32i-ilp32-rv32im-c
+Example 4: Add multi-lib suppport for rv64ima with lp64; rv64imaf with lp64, rv64imac with lp64 and rv64imafc with lp64 will reuse this multi-lib set.
+
+rv64ima-lp64--f,c,fc
+--with-multilib-generator have an optional configuration argument --cmodel=val for code model, this option will expand with other config options, val is a comma separated list of possible code model, currently we support medlow and medany.
+
+--with-stack-clash-protection-guard-size=size
+On certain targets this option sets the default stack clash protection guard size as a power of two in bytes. On AArch64 size is required to be either 12 (4KB) or 16 (64KB).
+
+--with-isa-spec=ISA-spec-string
+On RISC-V targets specify the default version of the RISC-V Unprivileged (formerly User-Level) ISA specification to produce code conforming to. The possibilities for ISA-spec-string are:
+
+--with-cpp-install-dir=dirname
+Specify that the user visible cpp program should be installed in prefix/dirname/cpp, in addition to bindir.
+
+--enable-comdat
+Enable COMDAT group support. This is primarily used to override the automatically detected value.
+
+--enable-initfini-array
+Force the use of sections .init_array and .fini_array (instead of .init and .fini) for constructors and destructors. Option --disable-initfini-array has the opposite effect. If neither option is specified, the configure script will try to guess whether the .init_array and .fini_array sections are supported and, if they are, use them.
+
+--enable-link-mutex
+When building GCC, use a mutex to avoid linking the compilers for multiple languages at the same time, to avoid thrashing on build systems with limited free memory. The default is not to use such a mutex.
+
+--enable-link-serialization
+When building GCC, use make dependencies to serialize linking the compilers for multiple languages, to avoid thrashing on build systems with limited free memory. The default is not to add such dependencies and thus with parallel make potentially link different compilers concurrently. If the argument is a positive integer, allow that number of concurrent link processes for the large binaries.
+
+--enable-maintainer-mode
+The build rules that regenerate the Autoconf and Automake output files as well as the GCC master message catalog gcc.pot are normally disabled. This is because it can only be rebuilt if the complete source tree is present. If you have changed the sources and want to rebuild the catalog, configuring with --enable-maintainer-mode will enable this. Note that you need a recent version of the gettext tools to do so.
+
+--disable-bootstrap
+For a native build, the default configuration is to perform a 3-stage bootstrap of the compiler when ‘make’ is invoked, testing that GCC can compile itself correctly. If you want to disable this process, you can configure with --disable-bootstrap.
+
+--enable-bootstrap
+In special cases, you may want to perform a 3-stage build even if the target and host triplets are different. This is possible when the host can run code compiled for the target (e.g. host is i686-linux, target is i486-linux). Starting from GCC 4.2, to do this you have to configure explicitly with --enable-bootstrap.
+
+--enable-generated-files-in-srcdir
+Neither the .c and .h files that are generated from Bison and flex nor the info manuals and man pages that are built from the .texi files are present in the repository development tree. When building GCC from that development tree, or from one of our snapshots, those generated files are placed in your build directory, which allows for the source to be in a readonly directory.
+
+If you configure with --enable-generated-files-in-srcdir then those generated files will go into the source directory. This is mainly intended for generating release or prerelease tarballs of the GCC sources, since it is not a requirement that the users of source releases to have flex, Bison, or makeinfo.
+
+--enable-version-specific-runtime-libs
+Specify that runtime libraries should be installed in the compiler specific subdirectory (libdir/gcc) rather than the usual places. In addition, ‘libstdc++’’s include files will be installed into libdir unless you overruled it by using --with-gxx-include-dir=dirname. Using this option is particularly useful if you intend to use several versions of GCC in parallel. The default is ‘yes’ for ‘libada’, and ‘no’ for the remaining libraries.
+
+--with-aix-soname=‘aix’, ‘svr4’ or ‘both’
+Traditional AIX shared library versioning (versioned Shared Object files as members of unversioned Archive Library files named ‘lib.a’) causes numerous headaches for package managers. However, Import Files as members of Archive Library files allow for filename-based versioning of shared libraries as seen on Linux/SVR4, where this is called the "SONAME". But as they prevent static linking, Import Files may be used with Runtime Linking only, where the linker does search for ‘libNAME.so’ before ‘libNAME.a’ library filenames with the ‘-lNAME’ linker flag.
+
+For detailed information please refer to the AIX ld Command reference.
+
+As long as shared library creation is enabled, upon:
+
+--with-aix-soname=aix
+--with-aix-soname=both
+A (traditional AIX) Shared Archive Library file is created:
+
+using the ‘libNAME.a’ filename scheme
+with the Shared Object file as archive member named ‘libNAME.so.V’ (except for ‘libgcc_s’, where the Shared Object file is named ‘shr.o’ for backwards compatibility), which
+- is used for runtime loading from inside the ‘libNAME.a’ file
+- is used for dynamic loading via dlopen("libNAME.a(libNAME.so.V)", RTLD_MEMBER)
+- is used for shared linking
+- is used for static linking, so no separate Static Archive Library file is needed
+--with-aix-soname=both
+--with-aix-soname=svr4
+A (second) Shared Archive Library file is created:
+
+using the ‘libNAME.so.V’ filename scheme
+with the Shared Object file as archive member named ‘shr.o’, which
+- is created with the -G linker flag
+- has the F_LOADONLY flag set
+- is used for runtime loading from inside the ‘libNAME.so.V’ file
+- is used for dynamic loading via dlopen("libNAME.so.V(shr.o)", RTLD_MEMBER)
+with the Import File as archive member named ‘shr.imp’, which
+- refers to ‘libNAME.so.V(shr.o)’ as the "SONAME", to be recorded in the Loader Section of subsequent binaries
+- indicates whether ‘libNAME.so.V(shr.o)’ is 32 or 64 bit
+- lists all the public symbols exported by ‘lib.so.V(shr.o)’, eventually decorated with the ‘weak’ Keyword
+- is necessary for shared linking against ‘lib.so.V(shr.o)’
+A symbolic link using the ‘libNAME.so’ filename scheme is created:
+
+pointing to the ‘libNAME.so.V’ Shared Archive Library file
+to permit the ld Command to find ‘lib.so.V(shr.imp)’ via the ‘-lNAME’ argument (requires Runtime Linking to be enabled)
+to permit dynamic loading of ‘lib.so.V(shr.o)’ without the need to specify the version number via dlopen("libNAME.so(shr.o)", RTLD_MEMBER)
+As long as static library creation is enabled, upon:
+
+--with-aix-soname=svr4
+A Static Archive Library is created:
+
+using the ‘libNAME.a’ filename scheme
+with all the Static Object files as archive members, which
+- are used for static linking
+While the aix-soname=‘svr4’ option does not create Shared Object files as members of unversioned Archive Library files any more, package managers still are responsible to transfer Shared Object files found as member of a previously installed unversioned Archive Library file into the newly installed Archive Library file with the same filename.
+
+WARNING: Creating Shared Object files with Runtime Linking enabled may bloat the TOC, eventually leading to TOC overflow errors, requiring the use of either the -Wl,-bbigtoc linker flag (seen to break with the GDB debugger) or some of the TOC-related compiler flags, see “RS/6000 and PowerPC Options” in the main manual.
+
+--with-aix-soname is currently supported by ‘libgcc_s’ only, so this option is still experimental and not for normal use yet.
+
+Default is the traditional behavior --with-aix-soname=‘aix’.
+
+--enable-languages=lang1,lang2,…
+Specify that only a particular subset of compilers and their runtime libraries should be built. For a list of valid values for langN you can issue the following command in the gcc directory of your GCC source tree:
+grep ^language= */config-lang.in
+Currently, you can use any of the following: all, default, ada, c, c++, d, fortran, go, jit, lto, objc, obj-c++. Building the Ada compiler has special requirements, see below. If you do not pass this flag, or specify the option default, then the default languages available in the gcc sub-tree will be configured. Ada, D, Go, Jit, and Objective-C++ are not default languages. LTO is not a default language, but is built by default because --enable-lto is enabled by default. The other languages are default languages. If all is specified, then all available languages are built. An exception is jit language, which requires --enable-host-shared to be included with all.
+
+--enable-stage1-languages=lang1,lang2,…
+Specify that a particular subset of compilers and their runtime libraries should be built with the system C compiler during stage 1 of the bootstrap process, rather than only in later stages with the bootstrapped C compiler. The list of valid values is the same as for --enable-languages, and the option all will select all of the languages enabled by --enable-languages. This option is primarily useful for GCC development; for instance, when a development version of the compiler cannot bootstrap due to compiler bugs, or when one is debugging front ends other than the C front end. When this option is used, one can then build the target libraries for the specified languages with the stage-1 compiler by using make stage1-bubble all-target, or run the testsuite on the stage-1 compiler for the specified languages using make stage1-start check-gcc.
+
+--disable-libada
+Specify that the run-time libraries and tools used by GNAT should not be built. This can be useful for debugging, or for compatibility with previous Ada build procedures, when it was required to explicitly do a ‘make -C gcc gnatlib_and_tools’.
+
+--disable-libsanitizer
+Specify that the run-time libraries for the various sanitizers should not be built.
+
+--disable-libssp
+Specify that the run-time libraries for stack smashing protection should not be built or linked against. On many targets library support is provided by the C library instead.
+
+--disable-libquadmath
+Specify that the GCC quad-precision math library should not be built. On some systems, the library is required to be linkable when building the Fortran front end, unless --disable-libquadmath-support is used.
+
+--disable-libquadmath-support
+Specify that the Fortran front end and libgfortran do not add support for libquadmath on systems supporting it.
+
+--disable-libgomp
+Specify that the GNU Offloading and Multi Processing Runtime Library should not be built.
+
+--disable-libvtv
+Specify that the run-time libraries used by vtable verification should not be built.
+
+--with-dwarf2
+Specify that the compiler should use DWARF 2 debugging information as the default.
+
+--with-advance-toolchain=at
+On 64-bit PowerPC Linux systems, configure the compiler to use the header files, library files, and the dynamic linker from the Advance Toolchain release at instead of the default versions that are provided by the Linux distribution. In general, this option is intended for the developers of GCC, and it is not intended for general use.
+
+--enable-targets=all
+--enable-targets=target_list
+Some GCC targets, e.g. powerpc64-linux, build bi-arch compilers. These are compilers that are able to generate either 64-bit or 32-bit code. Typically, the corresponding 32-bit target, e.g. powerpc-linux for powerpc64-linux, only generates 32-bit code. This option enables the 32-bit target to be a bi-arch compiler, which is useful when you want a bi-arch compiler that defaults to 32-bit, and you are building a bi-arch or multi-arch binutils in a combined tree. On mips-linux, this will build a tri-arch compiler (ABI o32/n32/64), defaulted to o32. Currently, this option only affects sparc-linux, powerpc-linux, x86-linux, mips-linux and s390-linux.
+
+--enable-default-pie
+Turn on -fPIE and -pie by default.
+
+--enable-secureplt
+This option enables -msecure-plt by default for powerpc-linux. See “RS/6000 and PowerPC Options” in the main manual
+
+--enable-default-ssp
+Turn on -fstack-protector-strong by default.
+
+--enable-cld
+This option enables -mcld by default for 32-bit x86 targets. See “i386 and x86-64 Options” in the main manual
+
+--enable-large-address-aware
+The --enable-large-address-aware option arranges for MinGW executables to be linked using the --large-address-aware option, that enables the use of more than 2GB of memory. If GCC is configured with this option, its effects can be reversed by passing the -Wl,--disable-large-address-aware option to the so-configured compiler driver.
+
+--enable-win32-registry
+--enable-win32-registry=key
+--disable-win32-registry
+The --enable-win32-registry option enables Microsoft Windows-hosted GCC to look up installations paths in the registry using the following key:
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Free Software Foundation\key
+key defaults to GCC version number, and can be overridden by the --enable-win32-registry=key option. Vendors and distributors who use custom installers are encouraged to provide a different key, perhaps one comprised of vendor name and GCC version number, to avoid conflict with existing installations. This feature is enabled by default, and can be disabled by --disable-win32-registry option. This option has no effect on the other hosts.
+
+--nfp
+Specify that the machine does not have a floating point unit. This option only applies to ‘m68k-sun-sunosn’. On any other system, --nfp has no effect.
+
+--enable-werror
+--disable-werror
+--enable-werror=yes
+--enable-werror=no
+When you specify this option, it controls whether certain files in the compiler are built with -Werror in bootstrap stage2 and later. If you don’t specify it, -Werror is turned on for the main development trunk. However it defaults to off for release branches and final releases. The specific files which get -Werror are controlled by the Makefiles.
+
+--enable-checking
+--disable-checking
+--enable-checking=list
+This option controls performing internal consistency checks in the compiler. It does not change the generated code, but adds error checking of the requested complexity. This slows down the compiler and may only work properly if you are building the compiler with GCC.
+
+When the option is not specified, the active set of checks depends on context. Namely, bootstrap stage 1 defaults to ‘--enable-checking=yes’, builds from release branches or release archives default to ‘--enable-checking=release’, and otherwise ‘--enable-checking=yes,extra’ is used. When the option is specified without a list, the result is the same as ‘--enable-checking=yes’. Likewise, ‘--disable-checking’ is equivalent to ‘--enable-checking=no’.
+
+The categories of checks available in list are ‘yes’ (most common checks ‘assert,misc,gc,gimple,rtlflag,runtime,tree,types’), ‘no’ (no checks at all), ‘all’ (all but ‘valgrind’), ‘release’ (cheapest checks ‘assert,runtime’) or ‘none’ (same as ‘no’). ‘release’ checks are always on and to disable them ‘--disable-checking’ or ‘--enable-checking=no[,<other checks>]’ must be explicitly requested. Disabling assertions makes the compiler and runtime slightly faster but increases the risk of undetected internal errors causing wrong code to be generated.
+
+Individual checks can be enabled with these flags: ‘assert’, ‘df’, ‘extra’, ‘fold’, ‘gc’, ‘gcac’, ‘gimple’, ‘misc’, ‘rtl’, ‘rtlflag’, ‘runtime’, ‘tree’, ‘types’ and ‘valgrind’. ‘extra’ extends ‘misc’ checking with extra checks that might affect code generation and should therefore not differ between stage1 and later stages in bootstrap.
+
+The ‘valgrind’ check requires the external valgrind simulator, available from https://valgrind.org. The ‘rtl’ checks are expensive and the ‘df’, ‘gcac’ and ‘valgrind’ checks are very expensive.
+
+--disable-stage1-checking
+--enable-stage1-checking
+--enable-stage1-checking=list
+This option affects only bootstrap build. If no --enable-checking option is specified the stage1 compiler is built with ‘yes’ checking enabled, otherwise the stage1 checking flags are the same as specified by --enable-checking. To build the stage1 compiler with different checking options use --enable-stage1-checking. The list of checking options is the same as for --enable-checking. If your system is too slow or too small to bootstrap a released compiler with checking for stage1 enabled, you can use ‘--disable-stage1-checking’ to disable checking for the stage1 compiler.
+
+--enable-coverage
+--enable-coverage=level
+With this option, the compiler is built to collect self coverage information, every time it is run. This is for internal development purposes, and only works when the compiler is being built with gcc. The level argument controls whether the compiler is built optimized or not, values are ‘opt’ and ‘noopt’. For coverage analysis you want to disable optimization, for performance analysis you want to enable optimization. When coverage is enabled, the default level is without optimization.
+
+--enable-gather-detailed-mem-stats
+When this option is specified more detailed information on memory allocation is gathered. This information is printed when using -fmem-report.
+
+--enable-valgrind-annotations
+Mark selected memory related operations in the compiler when run under valgrind to suppress false positives.
+
+--enable-nls
+--disable-nls
+The --enable-nls option enables Native Language Support (NLS), which lets GCC output diagnostics in languages other than American English. Native Language Support is enabled by default if not doing a canadian cross build. The --disable-nls option disables NLS.
+
+--with-included-gettext
+If NLS is enabled, the --with-included-gettext option causes the build procedure to prefer its copy of GNU gettext.
+
+--with-catgets
+If NLS is enabled, and if the host lacks gettext but has the inferior catgets interface, the GCC build procedure normally ignores catgets and instead uses GCC’s copy of the GNU gettext library. The --with-catgets option causes the build procedure to use the host’s catgets in this situation.
+
+--with-libiconv-prefix=dir
+Search for libiconv header files in dir/include and libiconv library files in dir/lib.
+
+--enable-obsolete
+Enable configuration for an obsoleted system. If you attempt to configure GCC for a system (build, host, or target) which has been obsoleted, and you do not specify this flag, configure will halt with an error message.
+
+All support for systems which have been obsoleted in one release of GCC is removed entirely in the next major release, unless someone steps forward to maintain the port.
+
+--enable-decimal-float
+--enable-decimal-float=yes
+--enable-decimal-float=no
+--enable-decimal-float=bid
+--enable-decimal-float=dpd
+--disable-decimal-float
+Enable (or disable) support for the C decimal floating point extension that is in the IEEE 754-2008 standard. This is enabled by default only on PowerPC, i386, and x86_64 GNU/Linux systems. Other systems may also support it, but require the user to specifically enable it. You can optionally control which decimal floating point format is used (either ‘bid’ or ‘dpd’). The ‘bid’ (binary integer decimal) format is default on i386 and x86_64 systems, and the ‘dpd’ (densely packed decimal) format is default on PowerPC systems.
+
+--enable-fixed-point
+--disable-fixed-point
+Enable (or disable) support for C fixed-point arithmetic. This option is enabled by default for some targets (such as MIPS) which have hardware-support for fixed-point operations. On other targets, you may enable this option manually.
+
+--with-long-double-128
+Specify if long double type should be 128-bit by default on selected GNU/Linux architectures. If using --without-long-double-128, long double will be by default 64-bit, the same as double type. When neither of these configure options are used, the default will be 128-bit long double when built against GNU C Library 2.4 and later, 64-bit long double otherwise.
+
+--with-long-double-format=ibm
+--with-long-double-format=ieee
+Specify whether long double uses the IBM extended double format or the IEEE 128-bit floating point format on PowerPC Linux systems. This configuration switch will only work on little endian PowerPC Linux systems and on big endian 64-bit systems where the default cpu is at least power7 (i.e. --with-cpu=power7, --with-cpu=power8, or --with-cpu=power9 is used).
+
+If you use the --with-long-double-64 configuration option, the --with-long-double-format=ibm and --with-long-double-format=ieee options are ignored.
+
+The default long double format is to use IBM extended double. Until all of the libraries are converted to use IEEE 128-bit floating point, it is not recommended to use --with-long-double-format=ieee.
+
+--enable-fdpic
+On SH Linux systems, generate ELF FDPIC code.
+
+--with-gmp=pathname
+--with-gmp-include=pathname
+--with-gmp-lib=pathname
+--with-mpfr=pathname
+--with-mpfr-include=pathname
+--with-mpfr-lib=pathname
+--with-mpc=pathname
+--with-mpc-include=pathname
+--with-mpc-lib=pathname
+If you want to build GCC but do not have the GMP library, the MPFR library and/or the MPC library installed in a standard location and do not have their sources present in the GCC source tree then you can explicitly specify the directory where they are installed (‘--with-gmp=gmpinstalldir’, ‘--with-mpfr=mpfrinstalldir’, ‘--with-mpc=mpcinstalldir’). The --with-gmp=gmpinstalldir option is shorthand for --with-gmp-lib=gmpinstalldir/lib and --with-gmp-include=gmpinstalldir/include. Likewise the --with-mpfr=mpfrinstalldir option is shorthand for --with-mpfr-lib=mpfrinstalldir/lib and --with-mpfr-include=mpfrinstalldir/include, also the --with-mpc=mpcinstalldir option is shorthand for --with-mpc-lib=mpcinstalldir/lib and --with-mpc-include=mpcinstalldir/include. If these shorthand assumptions are not correct, you can use the explicit include and lib options directly. You might also need to ensure the shared libraries can be found by the dynamic linker when building and using GCC, for example by setting the runtime shared library path variable (LD_LIBRARY_PATH on GNU/Linux and Solaris systems).
+
+These flags are applicable to the host platform only. When building a cross compiler, they will not be used to configure target libraries.
+
+--with-isl=pathname
+--with-isl-include=pathname
+--with-isl-lib=pathname
+If you do not have the isl library installed in a standard location and you want to build GCC, you can explicitly specify the directory where it is installed (‘--with-isl=islinstalldir’). The --with-isl=islinstalldir option is shorthand for --with-isl-lib=islinstalldir/lib and --with-isl-include=islinstalldir/include. If this shorthand assumption is not correct, you can use the explicit include and lib options directly.
+
+These flags are applicable to the host platform only. When building a cross compiler, they will not be used to configure target libraries.
+
+--with-stage1-ldflags=flags
+This option may be used to set linker flags to be used when linking stage 1 of GCC. These are also used when linking GCC if configured with --disable-bootstrap. If --with-stage1-libs is not set to a value, then the default is ‘-static-libstdc++ -static-libgcc’, if supported.
+
+--with-stage1-libs=libs
+This option may be used to set libraries to be used when linking stage 1 of GCC. These are also used when linking GCC if configured with --disable-bootstrap.
+
+--with-boot-ldflags=flags
+This option may be used to set linker flags to be used when linking stage 2 and later when bootstrapping GCC. If –with-boot-libs is not is set to a value, then the default is ‘-static-libstdc++ -static-libgcc’.
+
+--with-boot-libs=libs
+This option may be used to set libraries to be used when linking stage 2 and later when bootstrapping GCC.
+
+--with-debug-prefix-map=map
+Convert source directory names using -fdebug-prefix-map when building runtime libraries. ‘map’ is a space-separated list of maps of the form ‘old=new’.
+
+--enable-linker-build-id
+Tells GCC to pass --build-id option to the linker for all final links (links performed without the -r or --relocatable option), if the linker supports it. If you specify --enable-linker-build-id, but your linker does not support --build-id option, a warning is issued and the --enable-linker-build-id option is ignored. The default is off.
+
+--with-linker-hash-style=choice
+Tells GCC to pass --hash-style=choice option to the linker for all final links. choice can be one of ‘sysv’, ‘gnu’, and ‘both’ where ‘sysv’ is the default.
+
+--enable-gnu-unique-object
+--disable-gnu-unique-object
+Tells GCC to use the gnu_unique_object relocation for C++ template static data members and inline function local statics. Enabled by default for a toolchain with an assembler that accepts it and GLIBC 2.11 or above, otherwise disabled.
+
+--with-diagnostics-color=choice
+Tells GCC to use choice as the default for -fdiagnostics-color= option (if not used explicitly on the command line). choice can be one of ‘never’, ‘auto’, ‘always’, and ‘auto-if-env’ where ‘auto’ is the default. ‘auto-if-env’ makes -fdiagnostics-color=auto the default if GCC_COLORS is present and non-empty in the environment of the compiler, and -fdiagnostics-color=never otherwise.
+
+--with-diagnostics-urls=choice
+Tells GCC to use choice as the default for -fdiagnostics-urls= option (if not used explicitly on the command line). choice can be one of ‘never’, ‘auto’, ‘always’, and ‘auto-if-env’ where ‘auto’ is the default. ‘auto-if-env’ makes -fdiagnostics-urls=auto the default if GCC_URLS or TERM_URLS is present and non-empty in the environment of the compiler, and -fdiagnostics-urls=never otherwise.
+
+--enable-lto
+--disable-lto
+Enable support for link-time optimization (LTO). This is enabled by default, and may be disabled using --disable-lto.
+
+--enable-linker-plugin-configure-flags=FLAGS
+--enable-linker-plugin-flags=FLAGS
+By default, linker plugins (such as the LTO plugin) are built for the host system architecture. For the case that the linker has a different (but run-time compatible) architecture, these flags can be specified to build plugins that are compatible to the linker. For example, if you are building GCC for a 64-bit x86_64 (‘x86_64-pc-linux-gnu’) host system, but have a 32-bit x86 GNU/Linux (‘i686-pc-linux-gnu’) linker executable (which is executable on the former system), you can configure GCC as follows for getting compatible linker plugins:
+
+% srcdir/configure \
+    --host=x86_64-pc-linux-gnu \
+    --enable-linker-plugin-configure-flags=--host=i686-pc-linux-gnu \
+    --enable-linker-plugin-flags='CC=gcc\ -m32\ -Wl,-rpath,[...]/i686-pc-linux-gnu/lib'
+--with-plugin-ld=pathname
+Enable an alternate linker to be used at link-time optimization (LTO) link time when -fuse-linker-plugin is enabled. This linker should have plugin support such as gold starting with version 2.20 or GNU ld starting with version 2.21. See -fuse-linker-plugin for details.
+
+--enable-canonical-system-headers
+--disable-canonical-system-headers
+Enable system header path canonicalization for libcpp. This can produce shorter header file paths in diagnostics and dependency output files, but these changed header paths may conflict with some compilation environments. Enabled by default, and may be disabled using --disable-canonical-system-headers.
+
+--with-glibc-version=major.minor
+Tell GCC that when the GNU C Library (glibc) is used on the target it will be version major.minor or later. Normally this can be detected from the C library’s header files, but this option may be needed when bootstrapping a cross toolchain without the header files available for building the initial bootstrap compiler.
+
+If GCC is configured with some multilibs that use glibc and some that do not, this option applies only to the multilibs that use glibc. However, such configurations may not work well as not all the relevant configuration in GCC is on a per-multilib basis.
+
+--enable-as-accelerator-for=target
+Build as offload target compiler. Specify offload host triple by target.
+
+--enable-offload-targets=target1[=path1],…,targetN[=pathN]
+Enable offloading to targets target1, …, targetN. Offload compilers are expected to be already installed. Default search path for them is exec-prefix, but it can be changed by specifying paths path1, …, pathN.
+
+% srcdir/configure \
+    --enable-offload-targets=x86_64-intelmicemul-linux-gnu=/path/to/x86_64/compiler,nvptx-none
+--enable-offload-defaulted
+Tell GCC that configured but not installed offload compilers and libgomp plugins are silently ignored. Useful for distribution compilers where those are in separate optional packages and where the presence or absence of those optional packages should determine the actual supported offloading target set rather than the GCC configure-time selection.
+
+--enable-cet
+--disable-cet
+Enable building target run-time libraries with control-flow instrumentation, see -fcf-protection option. When --enable-cet is specified target libraries are configured to add -fcf-protection and, if needed, other target specific options to a set of building options.
+
+--enable-cet=auto is default. CET is enabled on Linux/x86 if target binutils supports Intel CET instructions and disabled otherwise. In this case, the target libraries are configured to get additional -fcf-protection option.
+
+--with-riscv-attribute=‘yes’, ‘no’ or ‘default’
+Generate RISC-V attribute by default, in order to record extra build information in object.
+
+The option is disabled by default. It is enabled on RISC-V/ELF (bare-metal) target if target binutils supported.
+
+--enable-s390-excess-float-precision
+--disable-s390-excess-float-precision
+On s390(x) targets, enable treatment of float expressions with double precision when in standards-compliant mode (e.g., when --std=c99 or -fexcess-precision=standard are given).
+
+For a native build and cross compiles that have target headers, the option’s default is derived from glibc’s behavior. When glibc clamps float_t to double, GCC follows and enables the option. For other cross compiles, the default is disabled.
+
+--with-zstd=pathname
+--with-zstd-include=pathname
+--with-zstd-lib=pathname
+If you do not have the zstd library installed in a standard location and you want to build GCC, you can explicitly specify the directory where it is installed (‘--with-zstd=zstdinstalldir’). The --with-zstd=zstdinstalldir option is shorthand for --with-zstd-lib=zstdinstalldir/lib and --with-zstd-include=zstdinstalldir/include. If this shorthand assumption is not correct, you can use the explicit include and lib options directly.
+
+These flags are applicable to the host platform only. When building a cross compiler, they will not be used to configure target libraries.
+
+Cross-Compiler-Specific Options
+The following options only apply to building cross compilers.
+
+--with-toolexeclibdir=dir
+Specify the installation directory for libraries built with a cross compiler. The default is ${gcc_tooldir}/lib.
+
+--with-sysroot
+--with-sysroot=dir
+Tells GCC to consider dir as the root of a tree that contains (a subset of) the root filesystem of the target operating system. Target system headers, libraries and run-time object files will be searched for in there. More specifically, this acts as if --sysroot=dir was added to the default options of the built compiler. The specified directory is not copied into the install tree, unlike the options --with-headers and --with-libs that this option obsoletes. The default value, in case --with-sysroot is not given an argument, is ${gcc_tooldir}/sys-root. If the specified directory is a subdirectory of ${exec_prefix}, then it will be found relative to the GCC binaries if the installation tree is moved.
+
+This option affects the system root for the compiler used to build target libraries (which runs on the build system) and the compiler newly installed with make install; it does not affect the compiler which is used to build GCC itself.
+
+If you specify the --with-native-system-header-dir=dirname option then the compiler will search that directory within dirname for native system headers rather than the default /usr/include.
+
+--with-build-sysroot
+--with-build-sysroot=dir
+Tells GCC to consider dir as the system root (see --with-sysroot) while building target libraries, instead of the directory specified with --with-sysroot. This option is only useful when you are already using --with-sysroot. You can use --with-build-sysroot when you are configuring with --prefix set to a directory that is different from the one in which you are installing GCC and your target libraries.
+
+This option affects the system root for the compiler used to build target libraries (which runs on the build system); it does not affect the compiler which is used to build GCC itself.
+
+If you specify the --with-native-system-header-dir=dirname option then the compiler will search that directory within dirname for native system headers rather than the default /usr/include.
+
+--with-headers
+--with-headers=dir
+Deprecated in favor of --with-sysroot. Specifies that target headers are available when building a cross compiler. The dir argument specifies a directory which has the target include files. These include files will be copied into the gcc install directory. This option with the dir argument is required when building a cross compiler, if prefix/target/sys-include doesn’t pre-exist. If prefix/target/sys-include does pre-exist, the dir argument may be omitted. fixincludes will be run on these files to make them compatible with GCC.
+
+--without-headers
+Tells GCC not use any target headers from a libc when building a cross compiler. When crossing to GNU/Linux, you need the headers so GCC can build the exception handling for libgcc.
+
+--with-libs
+--with-libs="dir1 dir2 … dirN"
+Deprecated in favor of --with-sysroot. Specifies a list of directories which contain the target runtime libraries. These libraries will be copied into the gcc install directory. If the directory list is omitted, this option has no effect.
+
+--with-newlib
+Specifies that ‘newlib’ is being used as the target C library. This causes __eprintf to be omitted from libgcc.a on the assumption that it will be provided by ‘newlib’.
+
+--with-avrlibc
+Only supported for the AVR target. Specifies that ‘AVR-Libc’ is being used as the target C  library. This causes float support functions like __addsf3 to be omitted from libgcc.a on the assumption that it will be provided by libm.a. For more technical details, cf. PR54461. It is not supported for RTEMS configurations, which currently use newlib. The option is supported since version 4.7.2 and is the default in 4.8.0 and newer.
+
+--with-double={32|64|32,64|64,32}
+--with-long-double={32|64|32,64|64,32|double}
+Only supported for the AVR target since version 10. Specify the default layout available for the C/C++ ‘double’ and ‘long double’ type, respectively. The following rules apply:
+
+The first value after the ‘=’ specifies the default layout (in bits) of the type and also the default for the -mdouble= resp. -mlong-double= compiler option.
+If more than one value is specified, respective multilib variants are available, and -mdouble= resp. -mlong-double= acts as a multilib option.
+If --with-long-double=double is specified, ‘double’ and ‘long double’ will have the same layout.
+The defaults are --with-long-double=64,32 and --with-double=32,64. The default ‘double’ layout imposed by the latter is compatible with older versions of the compiler that implement ‘double’ as a 32-bit type, which does not comply to the language standard.
+Not all combinations of --with-double= and --with-long-double= are valid. For example, the combination --with-double=32,64 --with-long-double=32 will be rejected because the first option specifies the availability of multilibs for ‘double’, whereas the second option implies that ‘long double’ — and hence also ‘double’ — is always 32 bits wide.
+
+--with-double-comparison={tristate|bool|libf7}
+Only supported for the AVR target since version 10. Specify what result format is returned by library functions that compare 64-bit floating point values (DFmode). The GCC default is ‘tristate’. If the floating point implementation returns a boolean instead, set it to ‘bool’.
+
+--with-libf7={libgcc|math|math-symbols|no}
+Only supported for the AVR target since version 10. Specify to which degree code from LibF7 is included in libgcc. LibF7 is an ad-hoc, AVR-specific, 64-bit floating point emulation written in C and (inline) assembly. ‘libgcc’ adds support for functions that one would usually expect in libgcc like double addition, double comparisons and double conversions. ‘math’ also adds routines that one would expect in libm.a, but with __ (two underscores) prepended to the symbol names as specified by math.h. ‘math-symbols’ also defines weak aliases for the functions declared in math.h. However, --with-libf7 won’t install no math.h header file whatsoever, this file must come from elsewhere. This option sets --with-double-comparison to ‘bool’.
+
+--with-nds32-lib=library
+Specifies that library setting is used for building libgcc.a. Currently, the valid library is ‘newlib’ or ‘mculib’. This option is only supported for the NDS32 target.
+
+--with-build-time-tools=dir
+Specifies where to find the set of target tools (assembler, linker, etc.) that will be used while building GCC itself. This option can be useful if the directory layouts are different between the system you are building GCC on, and the system where you will deploy it.
+
+For example, on an ‘ia64-hp-hpux’ system, you may have the GNU assembler and linker in /usr/bin, and the native tools in a different path, and build a toolchain that expects to find the native tools in /usr/bin.
+
+When you use this option, you should ensure that dir includes ar, as, ld, nm, ranlib and strip if necessary, and possibly objdump. Otherwise, GCC may use an inconsistent set of tools.
+
+Overriding configure test results
+Sometimes, it might be necessary to override the result of some configure test, for example in order to ease porting to a new system or work around a bug in a test. The toplevel configure script provides three variables for this:
+
+build_configargs
+The contents of this variable is passed to all build configure scripts.
+
+host_configargs
+The contents of this variable is passed to all host configure scripts.
+
+target_configargs
+The contents of this variable is passed to all target configure scripts.
+
+In order to avoid shell and make quoting issues for complex overrides, you can pass a setting for CONFIG_SITE and set variables in the site file.
+
+Objective-C-Specific Options
+The following options apply to the build of the Objective-C runtime library.
+
+--enable-objc-gc
+Specify that an additional variant of the GNU Objective-C runtime library is built, using an external build of the Boehm-Demers-Weiser garbage collector (https://www.hboehm.info/gc/). This library needs to be available for each multilib variant, unless configured with --enable-objc-gc=‘auto’ in which case the build of the additional runtime library is skipped when not available and the build continues.
+
+--with-target-bdw-gc=list
+--with-target-bdw-gc-include=list
+--with-target-bdw-gc-lib=list
+Specify search directories for the garbage collector header files and libraries. list is a comma separated list of key value pairs of the form ‘multilibdir=path’, where the default multilib key is named as ‘.’ (dot), or is omitted (e.g. ‘--with-target-bdw-gc=/opt/bdw-gc,32=/opt-bdw-gc32’).
+
+The options --with-target-bdw-gc-include and --with-target-bdw-gc-lib must always be specified together for each multilib variant and they take precedence over --with-target-bdw-gc. If --with-target-bdw-gc-include is missing values for a multilib, then the value for the default multilib is used (e.g. ‘--with-target-bdw-gc-include=/opt/bdw-gc/include’ ‘--with-target-bdw-gc-lib=/opt/bdw-gc/lib64,32=/opt-bdw-gc/lib32’). If none of these options are specified, the library is assumed in default locations.
+
+D-Specific Options
+The following options apply to the build of the D runtime library.
+
+--enable-libphobos-checking
+--disable-libphobos-checking
+--enable-libphobos-checking=list
+This option controls whether run-time checks and contracts are compiled into the D runtime library. When the option is not specified, the library is built with ‘release’ checking. When the option is specified without a list, the result is the same as ‘--enable-libphobos-checking=yes’. Likewise, ‘--disable-libphobos-checking’ is equivalent to ‘--enable-libphobos-checking=no’.
+
+The categories of checks available in list are ‘yes’ (compiles libphobos with -fno-release), ‘no’ (compiles libphobos with -frelease), ‘all’ (same as ‘yes’), ‘none’ or ‘release’ (same as ‘no’).
+
+Individual checks available in list are ‘assert’ (compiles libphobos with an extra option -fassert).
+
+--with-libphobos-druntime-only
+--with-libphobos-druntime-only=choice
+Specify whether to build only the core D runtime library (druntime), or both the core and standard library (phobos) into libphobos. This is useful for targets that have full support in druntime, but no or incomplete support in phobos. choice can be one of ‘auto’, ‘yes’, and ‘no’ where ‘auto’ is the default.
+
+When the option is not specified, the default choice ‘auto’ means that it is inferred whether the target has support for the phobos standard library. When the option is specified without a choice, the result is the same as ‘--with-libphobos-druntime-only=yes’.
+
+--with-target-system-zlib
+Use installed ‘zlib’ rather than that included with GCC. This needs to be available for each multilib variant, unless configured with --with-target-system-zlib=‘auto’ in which case the GCC included ‘zlib’ is only used when the system installed library is not available.
+
+Return to the GCC Installation page
+
+For questions related to the use of GCC, please consult these web pages and the GCC manuals. If that fails, the gcc-help@gcc.gnu.org mailing list might help. Comments on these web pages and the development of GCC are welcome on our developer list at gcc@gcc.gnu.org. All of our lists have public archives.
+Copyright (C) Free Software Foundation, Inc. Verbatim copying and distribution of this entire article is permitted in any medium, provided this notice is preserved.
+
+These pages are maintained by the GCC team. Last modified 2022-06-26.

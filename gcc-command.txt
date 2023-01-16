@@ -1,0 +1,6 @@
+../../external/gcc/configure \
+--host=`gcc -dumpmachine` \
+--target=riscv32-unknown-eabi \
+--with-arch=rv32gc \
+--prefix=`realpath ../../cross-gcc-install` \
+--enable-languages=c,c++
