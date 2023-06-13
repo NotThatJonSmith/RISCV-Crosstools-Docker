@@ -1,0 +1,9 @@
+[submodule "external/linux"]
+	path = external/linux
+	url = git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+[submodule "external/riscv-pk"]
+	path = external/riscv-pk
+	url = https://github.com/riscv-software-src/riscv-pk.git
+[submodule "external/busybox"]
+	path = external/busybox
+	url = git://busybox.net/busybox.git
