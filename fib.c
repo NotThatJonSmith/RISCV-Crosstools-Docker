@@ -2,10 +2,16 @@
 #include <stdint.h>
 #include <stdlib.h>
 
+int fib_cache[50] = {0};
 int fib(int n) {
-    if (n <= 2)
+    if (n < 2)
         return 1;
-    return fib(n-1) + fib(n-2);
+    if (n < 50 && fib_cache[n] != 0) {
+        return fib_cache[n];
+    }
+    int f = fib(n-1) + fib(n-2);
+    fib_cache[n] = f;
+    return f;
 }
 
 int main(int argc, char **argv) {
