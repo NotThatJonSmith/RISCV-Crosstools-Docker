@@ -7,3 +7,15 @@
 [submodule "external/busybox"]
 	path = external/busybox
 	url = git://busybox.net/busybox.git
+[submodule "binutils-gdb"]
+	path = external/binutils-gdb
+	url = https://sourceware.org/git/binutils-gdb.git
+[submodule "external/gcc"]
+	path = external/gcc
+	url = git://gcc.gnu.org/git/gcc.git
+[submodule "external/glibc"]
+	path = external/glibc
+	url = https://sourceware.org/git/glibc.git
+[submodule "external/newlib-cygwin"]
+	path = external/newlib-cygwin
+	url = https://sourceware.org/git/newlib-cygwin.git
