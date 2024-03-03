@@ -24,9 +24,9 @@
     // The presence of any node in the dtb that has compatible = "ucb,htif0"
     // causes the RISCV proxy kernel to set htif = 1 globally, and allow use of
     // the Berkeley HTIF.
-    // htif0: htif {
-    //     compatible = "ucb,htif0";
-    // };
+    htif0: htif {
+        compatible = "ucb,htif0";
+    };
 
     // "Core local interrupt"
     clint0: clint@2000000 {
@@ -42,16 +42,12 @@
         #address-cells = <0x01>;
         #size-cells = <0x01>;
         
-        region0: region@0 {
-            device_type = "memory";
-            reg = <0x00000000 0x10000000>;
-        };
-
-        region1: region@10000000 {
-            device_type = "memory";
-            reg = <0x80000000 0xe0000000>;
-        };
-
+        region0: region@00000000 { device_type = "memory"; reg = <0x00000000 0x10000000>; };
+        region1: region@80004000 { device_type = "memory"; reg = <0x80004000 0x7fffc000>; };
+        // region1: region@80000000 { device_type = "memory"; reg = <0x80000000 0x0000c000>; };
+        // region2: region@8000c000 { device_type = "memory"; reg = <0x8000c000 0x00004000>; };
+        // region3: region@80010000 { device_type = "memory"; reg = <0x80010000 0x7ffe0000>; };
+        // TODO, the pk's FDT parser only sees one memory, the last one, so you cannot make holes like this
     };
 
     cpus {

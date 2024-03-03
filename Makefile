@@ -1,12 +1,26 @@
-CC=/cross/bin/riscv32-unknown-elf-gcc
+
 OUT_DIR=out
 export PATH := /cross/bin:${PATH}
 
-$(OUT_DIR)/%: %.c
-	${CC} $< -o $@
+$(OUT_DIR)/apps64/%: apps/%.c
+	mkdir -p $(OUT_DIR)/apps64
+	/cross/bin/riscv64-unknown-elf-gcc $< -o $@
 
-$(OUT_DIR)/%-disasm.txt: $(OUT_DIR)/%
+$(OUT_DIR)/apps64/%-disasm.txt: $(OUT_DIR)/apps64/%
+	/cross/bin/riscv64-unknown-elf-objdump -d $< > $@
+
+$(OUT_DIR)/apps32/%: apps/%.c
+	mkdir -p $(OUT_DIR)/apps32
+	/cross/bin/riscv32-unknown-elf-gcc $< -o $@
+
+$(OUT_DIR)/apps32/%-disasm.txt: $(OUT_DIR)/apps32/%
 	/cross/bin/riscv32-unknown-elf-objdump -d $< > $@
+
+$(OUT_DIR)/kernels/pk32-disasm.txt: $(OUT_DIR)/kernels/pk32
+	/cross/bin/riscv32-unknown-elf-objdump -d $< > $@
+
+$(OUT_DIR)/kernels/pk64-disasm.txt: $(OUT_DIR)/kernels/pk64
+	/cross/bin/riscv64-unknown-elf-objdump -d $< > $@
 
 $(OUT_DIR)/dtbs/%.dtb: device_trees/%.dts
 	mkdir -p $(OUT_DIR)/dtbs
@@ -33,8 +47,6 @@ $(OUT_DIR)/kernels/pk64:
 	make && \
 	cp pk ../../kernels/pk64
 
-# Also, yes, we're building 32-bit pk but 64-bit linux. For now.
-# Should eventually build both PKs.
 # TODO dependency on linux-config file
 $(OUT_DIR)/kernels/vmlinux: linux-config
 	mkdir -p $(OUT_DIR)/kernels
@@ -42,4 +54,21 @@ $(OUT_DIR)/kernels/vmlinux: linux-config
 	cd external/linux && $(MAKE) CROSS_COMPILE=/cross/bin/riscv64-linux-gnu- ARCH=riscv
 	cp external/linux/vmlinux $(OUT_DIR)/kernels/vmlinux
 
-all: $(OUT_DIR)/kernels/pk32 $(OUT_DIR)/kernels/pk64 $(OUT_DIR)/kernels/vmlinux $(OUT_DIR)/fib $(OUT_DIR)/hello $(OUT_DIR)/dtbs/board.dtb $(OUT_DIR)/hello-disasm.txt
+all: $(OUT_DIR)/kernels/pk32 \
+	 $(OUT_DIR)/kernels/pk32-disasm.txt \
+	 $(OUT_DIR)/kernels/pk64 \
+	 $(OUT_DIR)/kernels/pk64-disasm.txt \
+	 $(OUT_DIR)/kernels/vmlinux \
+	 $(OUT_DIR)/apps32/fib \
+	 $(OUT_DIR)/apps64/fib \
+	 $(OUT_DIR)/apps32/fib-disasm.txt \
+	 $(OUT_DIR)/apps64/fib-disasm.txt \
+	 $(OUT_DIR)/apps32/dhry \
+	 $(OUT_DIR)/apps64/dhry \
+	 $(OUT_DIR)/apps32/dhry-disasm.txt \
+	 $(OUT_DIR)/apps64/dhry-disasm.txt \
+	 $(OUT_DIR)/apps32/hello \
+	 $(OUT_DIR)/apps64/hello \
+	 $(OUT_DIR)/apps32/hello-disasm.txt \
+	 $(OUT_DIR)/apps64/hello-disasm.txt \
+	 $(OUT_DIR)/dtbs/board.dtb 
