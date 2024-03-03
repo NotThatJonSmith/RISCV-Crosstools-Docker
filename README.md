@@ -6,7 +6,12 @@ Setting up a cross compiler is always a chore, and doing so for a variety of hos
 
 So, I went with a Docker approach.
 
-Set up the docker image locally:
+Pull the image:
+```
+docker pull notthatjonsmith/riscv-cross-toolkit:latest
+```
+
+Or set up the docker image locally:
 ```
 git submodule update --init
 docker build -t crosstools
